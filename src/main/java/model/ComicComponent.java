@@ -10,7 +10,11 @@ package model;
 public interface ComicComponent {
 	
 
-	public ComicComponent getComicComponent();
+	public ComicComponent getComicComponent(String name, String year, String issue);
+	
+	public String getIssuePublishYear();
+	
+	
 	
 	@Override
 	public String toString();

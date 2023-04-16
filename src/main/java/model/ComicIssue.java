@@ -158,9 +158,19 @@ public class ComicIssue implements ComicComponent{
 	}
 	
 	@Override
-	public ComicComponent getComicComponent() {
+	public ComicComponent getComicComponent(String issueName, String publishYear,
+			String issueNum) {
 		// TODO Auto-generated method stub
-		return this;
+		if((this.issueName==issueName) && (this.publishYear == publishYear) &&
+			(getIssueNumber() == issueNum))
+		{
+			return this;
+		}
+		else
+		{
+			return null;
+		}
+		
 	}
 	
 	public String getIssueName()
@@ -168,6 +178,7 @@ public class ComicIssue implements ComicComponent{
 		return this.issueName;
 	}
 	
+	@Override
 	public String getIssuePublishYear()
 	{
 		return this.publishYear;
