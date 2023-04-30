@@ -1,21 +1,16 @@
 package model;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class ComicCollection implements ComicComponent {
 
-	/**TODO:
-	*Add Error Handling
-	*Add Validation
-	*Push issues into interface
-	*Implement automatic counting
+	/**Todo: See Personal Notes:
+	*
 	**/
 	
-	private boolean subIssueCounterSetting=false;
 	private String seriesName;
 	private Integer publishYear;
-	private ArrayList<ComicComponent> comics;
-	private String currentIssue;
+	private LinkedList<ComicComponent> comics;
 	
 	/** Base Constructor
 	 * creates an empty comic collection with a publish year and series Name
@@ -24,12 +19,10 @@ public class ComicCollection implements ComicComponent {
 	{
 		this.seriesName=name;
 		this.publishYear=Integer.getInteger(year);
-		currentIssue="0";
 	}
 	
 	@Override
-	public ComicComponent getComicComponent(String issueName, String publishYear,
-			String issue) {
+	public ComicComponent getComicByIssue(String issue) {
 		int comicIndex=this.findComicIssue(issue);
 		ComicComponent book=this.comics.get(comicIndex);
 		return book;
@@ -95,6 +88,12 @@ public class ComicCollection implements ComicComponent {
 		return this.getIssuePublishYear();
 	}
 	
+	@Override
+	public String getSeriesName()
+	{
+		return this.seriesName;
+	}
+	
 	/**
 	 * 
 	 * @return size of collection
@@ -123,37 +122,6 @@ public class ComicCollection implements ComicComponent {
 		return issues;
 	}
 	
-	/**
-	 * 
-	 * @return true if next issue to be counted will be a Sub issue
-	 * @return false if next issue to be counted will be a major issue
-	 */
-	public boolean coutingSubIssues()
-	{
-		return subIssueCounterSetting;
-	}
-	
-	/**
-	 * Make next issue a sub issue
-	 * @param staticSubIssue if set to true alerts Comic collect that the sub issue will 
-	 * not change as part of the series (Ex. 16hu, 17hu, 18hu) alternatively
-	 * if set to false the next expected issue will increment the sub issue instead
-	 * of the main issue (Ex. 16a, 16b, 16c)
-	 * @param subIssueStart is what the sub issue will start with (ex. hu or a)
-	 */
-	public void startSubSeries(boolean staticSubIssue, String subIssueStart)
-	{
-		
-	}
-	
-	/**
-	 * Make the next issue a major issue
-	 * will remove sub issue from any automatically added issues
-	 */
-	public void stopSubSeries() 
-	{
-		this.subIssueCounterSetting=false;
-	}
 	
 	
 	

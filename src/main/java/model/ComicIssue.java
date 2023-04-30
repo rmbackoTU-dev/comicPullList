@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  */
 public class ComicIssue implements ComicComponent{
 	
-	private String issueName;
+	private String seriesName;
 	private String publishYear;
 	private Integer issueNumber;
 	private String subIssue;
@@ -28,7 +28,7 @@ public class ComicIssue implements ComicComponent{
 					"String must not be empty or null");
 			
 		}
-		issueName=name;
+		seriesName=name;
 		if(!isYearFormat(year))
 		{
 			throw new IllegalArgumentException(
@@ -158,11 +158,9 @@ public class ComicIssue implements ComicComponent{
 	}
 	
 	@Override
-	public ComicComponent getComicComponent(String issueName, String publishYear,
-			String issueNum) {
+	public ComicComponent getComicByIssue(String issueNum) {
 		// TODO Auto-generated method stub
-		if((this.issueName==issueName) && (this.publishYear == publishYear) &&
-			(getIssueNumber() == issueNum))
+		if(getIssueNumber().equals(issueNum))
 		{
 			return this;
 		}
@@ -175,13 +173,19 @@ public class ComicIssue implements ComicComponent{
 	
 	public String getIssueName()
 	{
-		return this.issueName;
+		return this.seriesName;
 	}
 	
 	@Override
 	public String getIssuePublishYear()
 	{
 		return this.publishYear;
+	}
+	
+	@Override
+	public String getSeriesName()
+	{
+		return this.seriesName;
 	}
 	
 	public String getIssueNumber()
@@ -198,7 +202,7 @@ public class ComicIssue implements ComicComponent{
 	@Override
 	public String toString()
 	{
-		String issueString=this.issueName+" - ("+this.publishYear+")\n"
+		String issueString=this.seriesName+" - ("+this.publishYear+")\n"
 				+ "issue: "+this.issueNumber.toString()+this.subIssue;
 		return issueString;
 	}

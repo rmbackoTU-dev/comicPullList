@@ -3,6 +3,7 @@ package model;
 import model.ComicIssue;
 import java.util.HashMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.After;
@@ -97,6 +98,42 @@ public class TestComicIssue {
 		assertEquals(varStrings.get("issueNum"),testIssueSuccess.getIssueNumber());
 		
 		
+	}
+	
+	@Test
+	public void sunnyDayGetters()
+	{
+		System.out.println("Sunny Day Constructor Issue/ getComicComponent -Sunny");
+		loadVariables("Success", "issue");
+		ComicIssue beforeConstruction=new ComicIssue(varStrings.get("testIssueName"),
+				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		ComicComponent afterConstruction=beforeConstruction.getComicByIssue(
+				varStrings.get("issueNum"));
+		System.out.println("Before Issue Series Name: "+varStrings.get("testIssueName"));
+		System.out.println("Before Issue Publish Year: "+varStrings.get("issueYear"));
+		System.out.println("Before Issue Issue Num: "+varStrings.get("issueNum"));
+		String afterConstructionSeriesName=afterConstruction.getSeriesName();
+		String afterConstructionSeriesYear=afterConstruction.getIssuePublishYear();
+		assertEquals(varStrings.get("testIssueName"), afterConstructionSeriesName);
+		assertEquals(varStrings.get("issueYear"), afterConstructionSeriesYear);
+	}
+	
+	@Test
+	public void rainyDayGetters()
+	{
+		/**Todo add exception that results in junit test only passing 
+		 * if null is returned
+		 * **/
+		System.out.println("Sunny Day Constructor Issue/ getComicComponent-Rainy");
+		loadVariables("Success", "issue");
+		ComicIssue beforeConstruction=new ComicIssue(varStrings.get("testIssueName"),
+				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		ComicComponent afterConstruction=beforeConstruction.getComicByIssue("2");
+		System.out.println("Before Issue Series Name: "+varStrings.get("testIssueName"));
+		System.out.println("Before Issue Publish Year: "+varStrings.get("issueYear"));
+		System.out.println("Before Issue Issue Num: "+varStrings.get("issueNum"));
+		System.out.println("Result should be null");
+		assertNull("Result Should be null", afterConstruction);
 	}
 	
 	@Test
