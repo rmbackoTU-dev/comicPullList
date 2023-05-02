@@ -9,7 +9,7 @@ public class ComicCollection implements ComicComponent {
 	**/
 	
 	private String seriesName;
-	private Integer publishYear;
+	private String publishYear;
 	private LinkedList<ComicComponent> comics;
 	
 	/** Base Constructor
@@ -18,7 +18,13 @@ public class ComicCollection implements ComicComponent {
 	public ComicCollection(String name, String year)
 	{
 		this.seriesName=name;
-		this.publishYear=Integer.getInteger(year);
+		this.publishYear=year;
+		comics=new LinkedList<ComicComponent>();
+	}
+	
+	public LinkedList<ComicComponent> getComicList()
+	{
+		return comics;
 	}
 	
 	@Override
@@ -32,21 +38,98 @@ public class ComicCollection implements ComicComponent {
 	 * Add a new Issue to the array list of Comic books
 	 * @param comicbook a single issue you would like to add
 	 */
-	public void addComicIssue(ComicIssue comicbook)
+	public void addComicIssue(ComicComponent comicbook)
+	throws IllegalArgumentException
 	{
-		// TODO add validation that comicbook is in comic book series
-		this.comics.add(comicbook);
+		String inputSeriesName=comicbook.getSeriesName();
+		String inputSeriesYear=comicbook.getIssuePublishYear();
+		if((this.seriesName.equals(inputSeriesName))&& 
+				(this.publishYear.equals(inputSeriesYear))) 
+		{
+			//Strip down to single issues
+			if(comicbook.getClass()== ComicIssue.class)
+			{
+				this.comics.add(comicbook);
+			}
+			else
+			{
+				ComicCollection collectedComic=(ComicCollection) comicbook;
+				LinkedList<ComicComponent> listOfComics=collectedComic.getComicList();
+				int collectionSize=collectedComic.getSize();
+				ComicComponent currentComic;
+				for (int i=0; i<=collectionSize; i++)
+				{
+					currentComic=listOfComics.get(i);
+					if(currentComic.getClass() != ComicIssue.class)
+					{
+						throw new IllegalArgumentException("Error: Trying to add a collection of collections");
+					}
+					else
+					{
+						this.comics.add(currentComic);
+					}
+				}
+			}
+		}
+		else
+		{
+			throw new IllegalArgumentException("The comic you are trying to add is not in the series");
+		}
 	}
 	
 	/**
 	 * Remove the comic book series from the comic book collection
 	 * @param comicbook
 	 */
-	public void removeComicIssue(ComicIssue comicbook)
+	public void removeComicIssue(ComicComponent comicbook)
+	throws IllegalArgumentException
 	{
-		String comicIssueNum=comicbook.getIssueNumber();
-		Integer comicIndex=findComicIssue(comicIssueNum);
-		comics.remove(comicIndex.intValue());
+		//make sure the comic is part of the series
+		String inputSeriesName=comicbook.getSeriesName();
+		String inputSeriesYear=comicbook.getIssuePublishYear();
+		if((this.seriesName.equals(inputSeriesName))&& 
+				(this.publishYear.equals(inputSeriesYear))) 
+		{
+			/**if it is a single comic validate then remove it
+			 *if a collection find each issue and remove individually
+			 **/
+			if(comicbook.getClass() == ComicIssue.class)
+			{
+				ComicIssue comic=(ComicIssue) comicbook;
+				String comicIssueNum=comic.getIssueNumber();
+				Integer comicIndex=findComicIssue(comicIssueNum);
+				comics.remove(comicIndex.intValue());
+				
+			 }
+			else
+			{
+				ComicCollection collectedComic=(ComicCollection) comicbook;
+				LinkedList<ComicComponent> listOfComics=collectedComic.getComicList();
+				int collectionSize=collectedComic.getSize();
+				ComicComponent currentComic;
+				for(int i=0; i<=collectionSize; i++)
+				{
+					currentComic=listOfComics.get(i);
+					if(currentComic.getClass() != ComicIssue.class)
+					{
+						throw new IllegalArgumentException("Error: Trying to remove a collection of collections");
+					}
+					else
+					{
+						ComicIssue comic=(ComicIssue) currentComic;
+						String comicIssueNum=comic.getIssueNumber();
+						Integer comicIndex=findComicIssue(comicIssueNum);
+						comics.remove(comicIndex.intValue());
+					}
+				}
+			}
+			
+		}
+		else
+		{
+			throw new IllegalArgumentException("The comic you are trying to remove is not in the series");
+		}
+			
 	}
 	
 	/**
@@ -69,7 +152,7 @@ public class ComicCollection implements ComicComponent {
 		{
 			currentComic=(ComicIssue)this.comics.get(i);
 			currentIssueNum=currentComic.getIssueNumber();
-			if(comicIssueNum == currentIssueNum)
+			if(comicIssueNum.equals(currentIssueNum))
 			{
 				foundIndex=i;
 			}
@@ -84,8 +167,7 @@ public class ComicCollection implements ComicComponent {
 
 	@Override
 	public String getIssuePublishYear() {
-		// TODO Auto-generated method stub
-		return this.getIssuePublishYear();
+		return this.publishYear;
 	}
 	
 	@Override
@@ -121,10 +203,4 @@ public class ComicCollection implements ComicComponent {
 		}
 		return issues;
 	}
-	
-	
-	
-	
-	
-
 }
