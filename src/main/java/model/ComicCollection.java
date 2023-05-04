@@ -10,7 +10,7 @@ public class ComicCollection implements ComicComponent {
 	
 	private String seriesName;
 	private String publishYear;
-	private LinkedList<ComicComponent> comics;
+	protected LinkedList<ComicComponent> comics;
 	
 	/** Base Constructor
 	 * creates an empty comic collection with a publish year and series Name
@@ -57,7 +57,7 @@ public class ComicCollection implements ComicComponent {
 				LinkedList<ComicComponent> listOfComics=collectedComic.getComicList();
 				int collectionSize=collectedComic.getSize();
 				ComicComponent currentComic;
-				for (int i=0; i<=collectionSize; i++)
+				for (int i=0; i<collectionSize; i++)
 				{
 					currentComic=listOfComics.get(i);
 					if(currentComic.getClass() != ComicIssue.class)
@@ -107,7 +107,7 @@ public class ComicCollection implements ComicComponent {
 				LinkedList<ComicComponent> listOfComics=collectedComic.getComicList();
 				int collectionSize=collectedComic.getSize();
 				ComicComponent currentComic;
-				for(int i=0; i<=collectionSize; i++)
+				for(int i=0; i<collectionSize; i++)
 				{
 					currentComic=listOfComics.get(i);
 					if(currentComic.getClass() != ComicIssue.class)
