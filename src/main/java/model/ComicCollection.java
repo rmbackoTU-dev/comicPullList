@@ -24,6 +24,8 @@ public class ComicCollection implements ComicComponent {
 	
 	public LinkedList<ComicComponent> getComicList()
 	{
+		//still debating if we want to share the linked list or we just want an iterator
+		//for now return the list and reprogram to just return an iterator.
 		return comics;
 	}
 	
@@ -98,7 +100,15 @@ public class ComicCollection implements ComicComponent {
 				ComicIssue comic=(ComicIssue) comicbook;
 				String comicIssueNum=comic.getIssueNumber();
 				Integer comicIndex=findComicIssue(comicIssueNum);
-				comics.remove(comicIndex.intValue());
+				if(comicIndex != null)
+				{
+					comics.remove(comicIndex.intValue());
+				}
+				else
+				{
+					throw new IllegalStateException("Can not remove comic. "+
+							"The comic does not already exist in the collection. Try adding a comic first");
+				}
 				
 			 }
 			else
@@ -119,7 +129,16 @@ public class ComicCollection implements ComicComponent {
 						ComicIssue comic=(ComicIssue) currentComic;
 						String comicIssueNum=comic.getIssueNumber();
 						Integer comicIndex=findComicIssue(comicIssueNum);
-						comics.remove(comicIndex.intValue());
+						if(comicIndex != null)
+						{
+							comics.remove(comicIndex.intValue());
+						}
+						else
+						{
+							throw new IllegalStateException("Can not remove comic. "
+									+ "The comic does not already exist in the collection. Try adding a "
+									+ "comic first");
+						}
 					}
 				}
 			}
