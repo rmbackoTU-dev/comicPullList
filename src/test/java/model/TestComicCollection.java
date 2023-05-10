@@ -2,10 +2,12 @@ package model;
 
 import model.ComicCollection;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import java.util.HashMap;
 import org.junit.Test;
 import org.junit.After;
+import org.junit.Before;
 import testUtils.NestedComicCollection;
 
 public class TestComicCollection {
@@ -14,23 +16,22 @@ public class TestComicCollection {
 	private HashMap<String, String> varStrings=
 			new HashMap<String, String>();
 	
+	@Before
+	public void setup()
+	{
+		varStrings.put("testComicOneName", "The Amazing Test Comic");
+		varStrings.put("issueYear", "2023");
+	}
+	
 	private void loadTestVariables( boolean multiple, boolean rainy)
 	{
+		varStrings.put("issueNumOne", "1");
 		if(multiple)
 		{
-			varStrings.put("testComicOneName", "The Amazing Test Comic");
 			varStrings.put("issueNumOne", "1");
 			varStrings.put("issueNumTwo", "2");
 			varStrings.put("issueNumThree", "2a");
-			varStrings.put("issueYear", "2023");
 		}
-		else if (!multiple)
-		{
-			varStrings.put("testComicOneName", "The Amazing Test Comic");
-			varStrings.put("issueNumOne", "1");
-			varStrings.put("issueYear", "2023");
-		}
-		
 		if(rainy)
 		{
 			varStrings.put("testComicRainyName", "The Incredible Test Comic");
@@ -48,7 +49,6 @@ public class TestComicCollection {
 	@Test
 	public void sunnyDayConstructAndGetters()
 	{
-		loadTestVariables(false, false);
 		String issueName=varStrings.get("testComicOneName");
 		String issueYear=varStrings.get("issueYear");
 		ComicCollection testComicCollection=new ComicCollection(issueName, issueYear);
@@ -189,17 +189,64 @@ public class TestComicCollection {
 	}
 	
 	@Test
-	public void sunnyDayListMultipleIssues()
+	public void sunnyDayListCollectionSize()
 	{
-		fail("Test not implemented");
+		loadTestVariables(true, false);
+		String issueName=varStrings.get("testComicOneName");
+		String issueYear=varStrings.get("issueYear");
+		String issueNumOne=varStrings.get("issueNumOne");
+		String issueNumTwo=varStrings.get("issueNumTwo");
+		String issueNumThree=varStrings.get("issueNumThree");
+		ComicCollection testComicCollection=new ComicCollection(issueName, issueYear);
+		ComicIssue testComicOne=new ComicIssue(issueName, issueYear, issueNumOne);
+		ComicIssue testComicTwo=new ComicIssue(issueName, issueYear, issueNumTwo);
+		ComicIssue testComicThree=new ComicIssue(issueName, issueYear, issueNumThree);
+		testComicCollection.addComicIssue(testComicOne);
+		int collectionSizeRslt=testComicCollection.getSize();
+		assertEquals(1, collectionSizeRslt);
+		testComicCollection.addComicIssue(testComicTwo);
+		collectionSizeRslt=testComicCollection.getSize();
+		assertEquals(2, collectionSizeRslt);
+		testComicCollection.addComicIssue(testComicThree);
+		collectionSizeRslt=testComicCollection.getSize();
+		assertEquals(3, collectionSizeRslt);
+		testComicCollection.removeComicIssue(testComicThree);
+		collectionSizeRslt=testComicCollection.getSize();
+		assertEquals(2, collectionSizeRslt);
 	}
 	
 	
-	
+	//Remember implement copy constructor to protect the list of objects
+	//only use the array of issueNums
 	@Test
-	public void rainyDayCopyConstructor()
+	public void SunnyDayCopyConstructor()
 	{
-		fail("Test not implemented");
+		loadTestVariables(true, false);
+		String issueName=varStrings.get("testComicOneName");
+		String issueYear=varStrings.get("issueYear");
+		String issueNumOne=varStrings.get("issueNumOne");
+		String issueNumTwo=varStrings.get("issueNumTwo");
+		String issueNumThree=varStrings.get("issueNumThree");
+		ComicCollection testComicCollection=new ComicCollection(issueName, issueYear);
+		ComicIssue testComicOne=new ComicIssue(issueName, issueYear, issueNumOne);
+		ComicIssue testComicTwo=new ComicIssue(issueName, issueYear, issueNumTwo);
+		ComicIssue testComicThree=new ComicIssue(issueName, issueYear, issueNumThree);
+		testComicCollection.addComicIssue(testComicOne);
+		testComicCollection.addComicIssue(testComicThree);
+		testComicCollection.addComicIssue(testComicTwo);
+		String[] testComicIssues=testComicCollection.getAllIssues();
+		ComicCollection copyCollection=new ComicCollection(issueName, issueYear, testComicIssues );
+		String[] resultComicIssues=copyCollection.getAllIssues();
+		//test each issue  of result comic issue against the testComicIssues
+		int testComicIssuesSize=testComicIssues.length;
+		int resultComicIssuesSize=resultComicIssues.length;
+		assertEquals(testComicIssuesSize, resultComicIssuesSize);
+		for(int i=0; i < resultComicIssuesSize; i++)
+		{
+			String currentResultIssuesStrings=resultComicIssues[i];
+			String currentTestIssueStrings=testComicIssues[i];
+			assertEquals(currentResultIssuesStrings, currentTestIssueStrings);
+		}
 	}
 	
 	@Test
@@ -229,19 +276,48 @@ public class TestComicCollection {
 	@Test
 	public void rainyDayListEmptyCollection()
 	{
-		fail("Test not implemented");
+		String issueName=varStrings.get("testComicOneName");
+		String issueYear=varStrings.get("issueYear");
+		ComicCollection testComicCollection=new ComicCollection(issueName, issueYear);
+		String[] issuesResult=testComicCollection.getAllIssues();
+		assertEquals(0, issuesResult.length);
+			
 	}
 	
 	@Test
 	public void rainyDayFindIssueEmptyCollection()
 	{
-		fail("Test not implemented");
+		loadTestVariables(false, true);
+		String issueName=varStrings.get("testComicOneName");
+		String issueYear=varStrings.get("issueYear");
+		String issueNum=varStrings.get("issueNumOne");
+		ComicCollection testComicCollection=new ComicCollection(issueName, issueYear);
+		Integer issue=testComicCollection.findComicIssue(issueNum);
+		assertNull("Expected result of find on an empty collection to be null", issue);
+		
+		
 	}
 	
 	@Test
 	public void rainyDayFindIssueNotInCollection()
 	{
-		fail("Test not implemented");
+		loadTestVariables(true, true);
+		String issueName=varStrings.get("testComicOneName");
+		String issueYear=varStrings.get("issueYear");
+		String issueNumOne=varStrings.get("issueNumOne");
+		String issueNumTwo=varStrings.get("issueNumTwo");
+		String issueNumThree=varStrings.get("issueNumThree");
+		ComicCollection testComicCollection=new ComicCollection(issueName, issueYear);
+		ComicIssue testComicOne=new ComicIssue(issueName, issueYear, issueNumOne);
+		ComicIssue testComicTwo=new ComicIssue(issueName, issueYear, issueNumTwo);
+		testComicCollection.addComicIssue(testComicOne);
+		testComicCollection.addComicIssue(testComicTwo);
+		/**Find Comic issue should be transitioned to a protected method the only classes
+		* that should be able to get information about the link list structure is
+		* children classes other classes should just get a list of issues. That is it.
+		*/
+		Integer locationOfIssue=testComicCollection.findComicIssue(issueNumThree);
+		assertNull("Find comic issue should return null if Comic is not found", locationOfIssue);
 	}
 	
 	@Test

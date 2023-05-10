@@ -10,7 +10,7 @@ public class ComicCollection implements ComicComponent {
 	
 	private String seriesName;
 	private String publishYear;
-	protected LinkedList<ComicComponent> comics;
+	private LinkedList<ComicComponent> comics;
 	
 	/** Base Constructor
 	 * creates an empty comic collection with a publish year and series Name
@@ -22,11 +22,38 @@ public class ComicCollection implements ComicComponent {
 		comics=new LinkedList<ComicComponent>();
 	}
 	
-	public LinkedList<ComicComponent> getComicList()
+	public ComicCollection(String name, String year, String[] issueNumbers)
 	{
-		//still debating if we want to share the linked list or we just want an iterator
-		//for now return the list and reprogram to just return an iterator.
-		return comics;
+		this.seriesName=name;
+		this.publishYear=year;
+		this.comics=new LinkedList<ComicComponent>();
+		int issueNumSize=issueNumbers.length;
+		for(int i=0; i<issueNumSize; i++)
+		{
+			String currNum=issueNumbers[i];
+			ComicIssue currentComic=new ComicIssue(this.seriesName, this.publishYear, currNum);
+			this.comics.add(currentComic);
+		}
+	}
+	
+	/**
+	 * Allows children classes to get the list of comics and implement specific changes
+	 * to how the collection is handled or ordered.
+	 * @return LinkedList of comics
+	 */
+	protected LinkedList<ComicComponent> getComicList()
+	{
+		return this.comics;
+	}
+	
+	/**
+	 * Allows children class to set the list of comics and implement specific changes
+	 * to how the collection is handled or ordered
+	 * @return LinkedList of comics
+	 */
+	protected void setComicList(LinkedList<ComicComponent> comics)
+	{
+		this.comics=comics;
 	}
 	
 	@Override
@@ -210,6 +237,7 @@ public class ComicCollection implements ComicComponent {
 	 */
 	public String[] getAllIssues()
 	{
+		
 		int numOfComics=getSize();
 		String[] issues=new String[numOfComics];
 		ComicIssue current;
