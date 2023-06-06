@@ -18,6 +18,8 @@ public class ComicIssue implements ComicComponent{
 	private String publishYear;
 	private Integer issueNumber;
 	private String subIssue;
+	private IssueStatusTag status;
+	private IssueStatusTag prevStatus;
 	
 	public ComicIssue(String name, String year, String issue)
 	throws IllegalArgumentException
@@ -48,8 +50,73 @@ public class ComicIssue implements ComicComponent{
 		{
 			subIssue="";
 		}
+		//state of a comic always starts as pending
+		this.status=IssueStatusTag.PENDING;
+		this.prevStatus=null;
+	}
+	
+	
+	/**
+	 * Sets the status to the correct state if the state is a valid next state
+	 * @param status
+	 */
+	public void updateStatusNext(String status) throws IllegalStateException
+	{
+		IssueStatusTag newTag=this.status;
+		if(status.equals("active"))
+		{
+			newTag=IssueStatusTag.ACTIVE;
+		}
+		else if(status.equals("pending"))
+		{
+			newTag=IssueStatusTag.PENDING;
+		}
+		else if(status.equals("skip"))
+		{
+			newTag=IssueStatusTag.SKIP;
+		}
+		else if(status.equals("backlog"))
+		{
+			newTag=IssueStatusTag.BACKLOG;
+		}
+		
+		try
+		{
+			this.prevStatus=this.status;
+			this.status=this.status.nextState(newTag);
+		}
+		catch(Exception exception)
+		{
+			this.status=prevStatus;
+			this.prevStatus=null;
+			throw new IllegalStateException("An error occured reseting to last known status");
+		}
+		
 		
 	}
+	
+	public void rollbackStatusToPrevious() throws IllegalStateException
+	{
+		IssueStatusTag current=this.status;
+		try
+		{
+			this.status=status.previousState(this.prevStatus);
+			this.prevStatus=null;
+		}
+		catch(Exception exception)
+		{
+			this.status=current;
+			throw new IllegalStateException("An error occured reseting current status");
+		}
+			
+		}
+	
+	public String getStatus()
+	{
+		return status.getStateName();
+	}
+	
+	
 	
 	private static boolean isYearFormat(String year)
 	{
