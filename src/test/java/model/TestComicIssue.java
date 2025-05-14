@@ -121,9 +121,7 @@ public class TestComicIssue {
 	@Test
 	public void rainyDayGetters()
 	{
-		/**Todo add exception that results in junit test only passing 
-		 * if null is returned
-		 * **/
+		
 		System.out.println("Sunny Day Constructor Issue/ getComicComponent-Rainy");
 		loadVariables("Success", "issue");
 		ComicIssue beforeConstruction=new ComicIssue(varStrings.get("testIssueName"),

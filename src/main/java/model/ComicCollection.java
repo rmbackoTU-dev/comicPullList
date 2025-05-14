@@ -11,6 +11,7 @@ public class ComicCollection implements ComicComponent {
 	private String seriesName;
 	private String publishYear;
 	private LinkedList<ComicComponent> comics;
+	private String isbn;
 	
 	/** Base Constructor
 	 * creates an empty comic collection with a publish year and series Name
@@ -185,10 +186,7 @@ public class ComicCollection implements ComicComponent {
 	 */
 	public Integer findComicIssue(String comicIssueNum)
 	{
-		/** TODO create a function in comicIssue that will compare 2 issues
-		*we can later optimize how we find an issue right now just to get the function
-		* on paper we can just brute force it.
-		**/
+		
 		int collectionSize=this.comics.size();
 		Integer foundIndex=null;
 		String currentIssueNum;
@@ -229,6 +227,17 @@ public class ComicCollection implements ComicComponent {
 	public int getSize()
 	{
 		return this.comics.size();
+	}
+	
+
+	public void setISBN(String isbn)
+	{
+		this.isbn=isbn;
+	}
+	
+	public String getISBN()
+	{
+		return this.isbn;
 	}
 	
 	/**

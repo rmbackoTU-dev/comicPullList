@@ -3,6 +3,7 @@ package model;
 import model.ComicCollection;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import java.util.HashMap;
 import org.junit.Test;
@@ -249,6 +250,25 @@ public class TestComicCollection {
 		}
 	}
 	
+	/**
+	 * Issues collections start at zero so the index for 1 will be 0
+	 * Test that zero is returned for the first issue
+	 */
+	@Test
+	public void SunnyDayFindASingleIssue()
+	{
+		loadTestVariables(true,false);
+		String issueName=varStrings.get("testComicOneName");
+		String issueYear=varStrings.get("issueYear");
+		String issueNumOne=varStrings.get("issueNumOne");
+		Integer expectedIndex=0;
+		ComicCollection testComicCollection=new ComicCollection(issueName, issueYear);
+		testComicCollection.addComicIssue(new ComicIssue(issueName, issueYear, issueNumOne));
+		Integer findIssueNum=testComicCollection.findComicIssue(issueNumOne);
+		assertTrue("The issue found is not the issue expected", findIssueNum.equals(expectedIndex));
+		
+	}
+	
 	@Test
 	public void rainyDayNoComicToRemove()
 	{
@@ -272,6 +292,7 @@ public class TestComicCollection {
 			assertEquals(expectedErrMsg, errorMsg);
 		}
 	}
+	
 	
 	@Test
 	public void rainyDayListEmptyCollection()

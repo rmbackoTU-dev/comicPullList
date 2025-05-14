@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,6 +12,8 @@ import java.util.regex.Pattern;
  * duplicates or missing issues.
  * @author rmbackoTU-dev
  *
+ *@TODO
+ *Update so that the issue is just a String returned by the issueSetting.
  */
 public class ComicIssue implements ComicComponent{
 	
@@ -19,7 +22,9 @@ public class ComicIssue implements ComicComponent{
 	private Integer issueNumber;
 	private String subIssue;
 	private IssueStatusTag status;
-	private IssueStatusTag prevStatus;
+	//Only meant to keep the last 3 states (We could change this to a stack later)
+	private IssueStatusTag[] prevStatuses=new IssueStatusTag[3];
+	private String isbn;
 	
 	public ComicIssue(String name, String year, String issue)
 	throws IllegalArgumentException
@@ -52,7 +57,95 @@ public class ComicIssue implements ComicComponent{
 		}
 		//state of a comic always starts as pending
 		this.status=IssueStatusTag.PENDING;
-		this.prevStatus=null;
+		initalizePrevious();
+	}
+	
+	/**
+	 * Initializes all the previous comic book states to null
+	 */
+	private void initalizePrevious()
+	{
+		for(int i=0; i<this.prevStatuses.length; i++)
+		{
+			this.prevStatuses[i]=null;
+		}
+	}
+	
+	private void pushPrevStatus(IssueStatusTag tag)
+	{
+		if(this.prevStatuses[0] == null)
+		{
+			this.prevStatuses[0]=tag;
+		}
+		else
+		{
+			IssueStatusTag prev=this.prevStatuses[0];
+			IssueStatusTag current=null;
+			//push everything to the right
+			for(int i=1; i<this.prevStatuses.length; i++)
+			{
+				//keeps the current and pushes out the last previous
+				current=this.prevStatuses[i];
+				this.prevStatuses[i]=prev;
+				prev=current;
+				if(i==2 && !(current == null))
+				{
+					System.out.println("Dropping "+current.getStateName()+" from history.");
+				}
+			}
+			//now add the new tag up front
+			this.prevStatuses[0]=tag;
+		}
+	}
+	
+	private void pushRollBackStatus(IssueStatusTag rollBackTag)
+	{
+		for(int i=2; i>=0; i--)
+		{
+			//skip it if it is null it means nothing was lost
+			IssueStatusTag current;
+			IssueStatusTag replace=rollBackTag;
+			if(!(this.prevStatuses[i] == null))
+			{
+				current=this.prevStatuses[i];
+				this.prevStatuses[i]=rollBackTag;
+				//the current tag goes into the previous slot
+				replace=current;
+				if(i==0)
+				{
+					System.out.println("Undoing push of "+replace.getStateName());
+				}
+			}
+		}
+	}
+	
+	private IssueStatusTag popPrevStatus()
+	{
+		IssueStatusTag current=null;
+		if(!(this.prevStatuses[0] == (null)))
+		{
+			current=this.prevStatuses[0];
+			//move everything else left
+			int start=this.prevStatuses.length-1;
+			IssueStatusTag last=null;
+			IssueStatusTag replace=null;
+			while(start>=0)
+			{
+				if(last == null)
+				{
+					last=this.prevStatuses[start];
+					this.prevStatuses[start]=null;
+				}
+				else
+				{
+					replace=this.prevStatuses[start];
+					this.prevStatuses[start]=last;
+					last=replace;
+				}
+				start--;
+			}
+		}
+		return current;
 	}
 	
 	
@@ -61,8 +154,11 @@ public class ComicIssue implements ComicComponent{
 	 * @param status
 	 */
 	public void updateStatusNext(String status) throws IllegalStateException
-	{
+	{	
 		IssueStatusTag newTag=this.status;
+		IssueStatusTag prevStatus=this.status;
+		//save the last status in case we lose it by accident
+		IssueStatusTag prevHistory=this.prevStatuses[2];
 		if(status.equals("active"))
 		{
 			newTag=IssueStatusTag.ACTIVE;
@@ -82,13 +178,15 @@ public class ComicIssue implements ComicComponent{
 		
 		try
 		{
-			this.prevStatus=this.status;
+			
+			pushPrevStatus(prevStatus);
 			this.status=this.status.nextState(newTag);
 		}
 		catch(Exception exception)
 		{
-			this.status=prevStatus;
-			this.prevStatus=null;
+			//reset to previous status
+			this.status=popPrevStatus();
+			this.pushRollBackStatus(prevHistory);;
 			throw new IllegalStateException("An error occured reseting to last known status");
 		}
 		
@@ -97,15 +195,18 @@ public class ComicIssue implements ComicComponent{
 	
 	public void rollbackStatusToPrevious() throws IllegalStateException
 	{
+		//In transaction terms this is dangerous because it is unprotected should be the smallest transaction unit.
 		IssueStatusTag current=this.status;
+		IssueStatusTag prev=popPrevStatus();
 		try
 		{
-			this.status=status.previousState(this.prevStatus);
-			this.prevStatus=null;
+			this.status=status.previousState(prev);	
 		}
 		catch(Exception exception)
 		{
+			//Rolling back just resets and puts the previous back on the stack
 			this.status=current;
+			pushPrevStatus(prev);
 			throw new IllegalStateException("An error occured reseting current status");
 		}
 			
@@ -236,6 +337,17 @@ public class ComicIssue implements ComicComponent{
 			return null;
 		}
 		
+	}
+	
+	public void setISBN(String isbn)
+	{
+		this.isbn=isbn;
+	}
+	
+
+	public String getISBN()
+	{
+		return this.isbn;
 	}
 	
 	public String getIssueName()

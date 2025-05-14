@@ -96,6 +96,28 @@ public class TestComicIssueEnum {
 		testComic.rollbackStatusToPrevious();
 		statusName=testComic.getStatus();
 		assertEquals("pending", statusName);
+		//Test rest of Active Previous
+		testComic.updateStatusNext("active");
+		testComic.rollbackStatusToPrevious();
+		statusName=testComic.getStatus();
+		assertEquals("pending", statusName);
+		testComic.updateStatusNext("skip");
+		testComic.updateStatusNext("active");
+		testComic.rollbackStatusToPrevious();
+		statusName=testComic.getStatus();
+		assertEquals("skip", statusName);
+		testComic.rollbackStatusToPrevious();
+		statusName=testComic.getStatus();
+		assertEquals("pending", statusName);
+		testComic.updateStatusNext("backlog");
+		testComic.updateStatusNext("active");
+		statusName=testComic.getStatus();
+		assertEquals("active", statusName);
+		//Finish off Testing Backlog States.
+		testComic.updateStatusNext("backlog");
+		testComic.rollbackStatusToPrevious();
+		statusName=testComic.getStatus();
+		assertEquals("active", statusName);
 	}
 	
 	@Test(expected=IllegalStateException.class)
@@ -175,7 +197,7 @@ public class TestComicIssueEnum {
 	{
 		thrown.expect(IllegalStateException.class);
 		IssueStatusTag testStatus=IssueStatusTag.SKIP;
-		testStatus.previousState(IssueStatusTag.BACKLOG);
+		testStatus.nextState(IssueStatusTag.BACKLOG);
 	}
 	
 	@Test(expected=IllegalStateException.class)
