@@ -6,6 +6,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import org.junit.Test;
+
+import junit.framework.Assert;
+
 import org.junit.After;
 
 
@@ -98,6 +101,29 @@ public class TestComicIssue {
 		assertEquals(varStrings.get("issueNum"),testIssueSuccess.getIssueNumber());
 		
 		
+	}
+	
+	@Test
+	public void sunnyDayTestOptionalISBN()
+	{
+		System.out.println("Sunny Day Constructor Issue/ get ISBN-Sunny");
+		loadVariables("Success", "issue");
+		ComicIssue beforeConstruction=new ComicIssue(varStrings.get("testIssueName"),
+				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		String testComicISBN="41941 37681 3 00011";
+		beforeConstruction.setISBN(testComicISBN);
+		assertEquals(testComicISBN, beforeConstruction.getISBN());	
+	}
+	
+	@Test
+	public void sunnyDayTestOptionalISBNType()
+	{
+		System.out.println("Sunny Day Constructor Issue/ get ISBN Type (should be static for all books)");
+		loadVariables("Success", "issue");
+		ComicIssue beforeConstruction=new ComicIssue(varStrings.get("testIssueName"),
+				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		String testISBNType="comicUPC";
+		assertEquals(beforeConstruction.getISBNType(), testISBNType);
 	}
 	
 	@Test

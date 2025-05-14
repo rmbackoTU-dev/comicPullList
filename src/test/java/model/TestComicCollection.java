@@ -47,6 +47,8 @@ public class TestComicCollection {
 		varStrings=new HashMap<String, String>();
 	}
 	
+	
+	
 	@Test
 	public void sunnyDayConstructAndGetters()
 	{
@@ -57,6 +59,32 @@ public class TestComicCollection {
 		String actualYear=testComicCollection.getIssuePublishYear();
 		assertEquals(issueName,actualSeriesName);
 		assertEquals(issueYear,actualYear);
+	}
+	
+	@Test
+	public void sunnyDayTestOptionalISBN()
+	{
+		loadTestVariables(false, false);
+		String issueName=varStrings.get("testComicOneName");
+		String issueYear=varStrings.get("issueYear");
+		String issueNumOne=varStrings.get("issueNumOne");
+		ComicCollection testComicCollection=new ComicCollection(issueName, issueYear);
+		ComicIssue testComic=new ComicIssue(issueName, issueYear, issueNumOne);	
+		testComicCollection.addComicIssue(testComic);
+		String testComicISBN="41941 37681 3 00011";
+		testComicCollection.setISBN(testComicISBN);
+		assertEquals(testComicCollection.getISBN(), testComicISBN);
+	}
+	
+	@Test
+	public void sunnyDayTestOptionalISBNType()
+	{
+		loadTestVariables(false, false);
+		String issueName=varStrings.get("testComicOneName");
+		String issueYear=varStrings.get("issueYear");
+		ComicCollection testComicCollection=new ComicCollection(issueName, issueYear);
+		String expectedISBNType="comicUPC";
+		assertEquals(testComicCollection.getISBNType(), expectedISBNType);
 	}
 	
 	@Test

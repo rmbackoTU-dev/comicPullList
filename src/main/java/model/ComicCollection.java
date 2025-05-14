@@ -12,6 +12,8 @@ public class ComicCollection implements ComicComponent {
 	private String publishYear;
 	private LinkedList<ComicComponent> comics;
 	private String isbn;
+	//Implement interface for larger book app, important to distinguish between this and a typical book
+	private String isbnType="comicUPC";
 	
 	/** Base Constructor
 	 * creates an empty comic collection with a publish year and series Name
@@ -238,6 +240,11 @@ public class ComicCollection implements ComicComponent {
 	public String getISBN()
 	{
 		return this.isbn;
+	}
+	
+	public String getISBNType()
+	{
+		return this.isbnType;
 	}
 	
 	/**

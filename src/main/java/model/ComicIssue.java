@@ -25,6 +25,8 @@ public class ComicIssue implements ComicComponent{
 	//Only meant to keep the last 3 states (We could change this to a stack later)
 	private IssueStatusTag[] prevStatuses=new IssueStatusTag[3];
 	private String isbn;
+	//implement book interface later for larger app. Highlight this does not look like a typical isbn
+	private String isbnType="comicUPC";
 	
 	public ComicIssue(String name, String year, String issue)
 	throws IllegalArgumentException
@@ -348,6 +350,11 @@ public class ComicIssue implements ComicComponent{
 	public String getISBN()
 	{
 		return this.isbn;
+	}
+	
+	public String getISBNType()
+	{
+		return this.isbnType;
 	}
 	
 	public String getIssueName()
