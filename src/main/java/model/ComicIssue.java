@@ -20,10 +20,7 @@ public class ComicIssue implements ComicComponent{
 	private String seriesName;
 	private String publishYear;
 	private Integer issueNumber;
-	private String subIssue;
-	private IssueStatusTag status;
-	//Only meant to keep the last 3 states (We could change this to a stack later)
-	private IssueStatusTag[] prevStatuses=new IssueStatusTag[3];
+	private Integer collectionID;
 	private String isbn;
 	//implement book interface later for larger app. Highlight this does not look like a typical isbn
 	private String isbnType="comicUPC";
@@ -34,7 +31,7 @@ public class ComicIssue implements ComicComponent{
 		if(name=="" || name == null )
 		{
 			throw new IllegalArgumentException(
-					"String must not be empty or null");
+					"Comic Name must not be empty or null");
 			
 		}
 		seriesName=name;
@@ -49,177 +46,9 @@ public class ComicIssue implements ComicComponent{
 		}
 		
 		issueNumber=parseIssueNumber(issue);
-		if(hasSubIssue(issue))
-		{
-			subIssue=parseSubIssue(issue);
-		}
-		else
-		{
-			subIssue="";
-		}
-		//state of a comic always starts as pending
-		this.status=IssueStatusTag.PENDING;
-		initalizePrevious();
+		collectionID=0;
 	}
-	
-	/**
-	 * Initializes all the previous comic book states to null
-	 */
-	private void initalizePrevious()
-	{
-		for(int i=0; i<this.prevStatuses.length; i++)
-		{
-			this.prevStatuses[i]=null;
-		}
-	}
-	
-	private void pushPrevStatus(IssueStatusTag tag)
-	{
-		if(this.prevStatuses[0] == null)
-		{
-			this.prevStatuses[0]=tag;
-		}
-		else
-		{
-			IssueStatusTag prev=this.prevStatuses[0];
-			IssueStatusTag current=null;
-			//push everything to the right
-			for(int i=1; i<this.prevStatuses.length; i++)
-			{
-				//keeps the current and pushes out the last previous
-				current=this.prevStatuses[i];
-				this.prevStatuses[i]=prev;
-				prev=current;
-				if(i==2 && !(current == null))
-				{
-					System.out.println("Dropping "+current.getStateName()+" from history.");
-				}
-			}
-			//now add the new tag up front
-			this.prevStatuses[0]=tag;
-		}
-	}
-	
-	private void pushRollBackStatus(IssueStatusTag rollBackTag)
-	{
-		for(int i=2; i>=0; i--)
-		{
-			//skip it if it is null it means nothing was lost
-			IssueStatusTag current;
-			IssueStatusTag replace=rollBackTag;
-			if(!(this.prevStatuses[i] == null))
-			{
-				current=this.prevStatuses[i];
-				this.prevStatuses[i]=rollBackTag;
-				//the current tag goes into the previous slot
-				replace=current;
-				if(i==0)
-				{
-					System.out.println("Undoing push of "+replace.getStateName());
-				}
-			}
-		}
-	}
-	
-	private IssueStatusTag popPrevStatus()
-	{
-		IssueStatusTag current=null;
-		if(!(this.prevStatuses[0] == (null)))
-		{
-			current=this.prevStatuses[0];
-			//move everything else left
-			int start=this.prevStatuses.length-1;
-			IssueStatusTag last=null;
-			IssueStatusTag replace=null;
-			while(start>=0)
-			{
-				if(last == null)
-				{
-					last=this.prevStatuses[start];
-					this.prevStatuses[start]=null;
-				}
-				else
-				{
-					replace=this.prevStatuses[start];
-					this.prevStatuses[start]=last;
-					last=replace;
-				}
-				start--;
-			}
-		}
-		return current;
-	}
-	
-	
-	/**
-	 * Sets the status to the correct state if the state is a valid next state
-	 * @param status
-	 */
-	public void updateStatusNext(String status) throws IllegalStateException
-	{	
-		IssueStatusTag newTag=this.status;
-		IssueStatusTag prevStatus=this.status;
-		//save the last status in case we lose it by accident
-		IssueStatusTag prevHistory=this.prevStatuses[2];
-		if(status.equals("active"))
-		{
-			newTag=IssueStatusTag.ACTIVE;
-		}
-		else if(status.equals("pending"))
-		{
-			newTag=IssueStatusTag.PENDING;
-		}
-		else if(status.equals("skip"))
-		{
-			newTag=IssueStatusTag.SKIP;
-		}
-		else if(status.equals("backlog"))
-		{
-			newTag=IssueStatusTag.BACKLOG;
-		}
-		
-		try
-		{
-			
-			pushPrevStatus(prevStatus);
-			this.status=this.status.nextState(newTag);
-		}
-		catch(Exception exception)
-		{
-			//reset to previous status
-			this.status=popPrevStatus();
-			this.pushRollBackStatus(prevHistory);;
-			throw new IllegalStateException("An error occured reseting to last known status");
-		}
-		
-		
-	}
-	
-	public void rollbackStatusToPrevious() throws IllegalStateException
-	{
-		//In transaction terms this is dangerous because it is unprotected should be the smallest transaction unit.
-		IssueStatusTag current=this.status;
-		IssueStatusTag prev=popPrevStatus();
-		try
-		{
-			this.status=status.previousState(prev);	
-		}
-		catch(Exception exception)
-		{
-			//Rolling back just resets and puts the previous back on the stack
-			this.status=current;
-			pushPrevStatus(prev);
-			throw new IllegalStateException("An error occured reseting current status");
-		}
-			
-		}
-	
-	public String getStatus()
-	{
-		return status.getStateName();
-	}
-	
-	
+
 	
 	private static boolean isYearFormat(String year)
 	{
@@ -279,66 +108,23 @@ public class ComicIssue implements ComicComponent{
 		}
 		return issueNumber;
 	}
-	/**
-	 * 
-	 * @param issue
-	 * @return returns an alphabetic part of the issue, if there is no alphabetic part
-	 *return err
-	 * @throws IllegalArgumentException
-	 */
-	private static String parseSubIssue(String issue)
-	throws IllegalArgumentException
+
+	
+	public void setCollection(int idNum)
 	{
-		String subIssueStr="err";
-		if(!hasSubIssue(issue))
-		{
-			throw new IllegalArgumentException("This issue does not have a sub issue");
-		}
-		else
-		{
-			//Make a pattern to find the alphabetic portion of the issue
-			Pattern subIssuePartPattern=Pattern.compile("[a-z]+");
-			Matcher subIssuePartMatcher=subIssuePartPattern.matcher(issue);
-			if(subIssuePartMatcher.find())
-			{
-				int beginning = subIssuePartMatcher.start();
-				int ending= subIssuePartMatcher.end();
-				
-				subIssueStr=issue.substring(beginning, ending);
-			}
-		}
-		
-		return subIssueStr;
+		this.collectionID=idNum;
 	}
 	
-	private static boolean hasSubIssue(String issue)
+	public boolean isInCollection()
 	{
-		boolean hasSubIssue=false;
-		int inputLength=issue.length();
-		if(inputLength >= 2)
-		{
-			Pattern subIssuePattern=Pattern.compile("\\d{1,}[a-z]{1,}");
-			
-			Matcher subIssueMatcher=subIssuePattern.matcher(issue);
-			
-			hasSubIssue=subIssueMatcher.find();
-		}
+		boolean collectionStatus=(this.collectionID != 0);
+		return collectionStatus;
 		
-		return hasSubIssue;
 	}
 	
-	@Override
-	public ComicComponent getComicByIssue(String issueNum) {
-		// TODO Auto-generated method stub
-		if(getIssueNumber().equals(issueNum))
-		{
-			return this;
-		}
-		else
-		{
-			return null;
-		}
-		
+	public Integer getCollectionID()
+	{
+		return this.collectionID;
 	}
 	
 	public void setISBN(String isbn)
@@ -376,20 +162,47 @@ public class ComicIssue implements ComicComponent{
 	
 	public String getIssueNumber()
 	{
-		String fullIssueNum=this.issueNumber.toString()+this.subIssue;
+		String fullIssueNum=this.issueNumber.toString();
 		return fullIssueNum;
 	}
 	
-	public String getSubIssueNumber()
+	public void setIssueNumber(String issueNumber)
 	{
-		return this.subIssue;
+		this.issueNumber=parseIssueNumber(issueNumber);
+	}
+	
+	public void setSeriesName(String name)
+	{
+		if(name=="" || name == null )
+		{
+			throw new IllegalArgumentException(
+					"Comic Name must not be empty or null");	
+		}
+		else
+		{
+			this.seriesName=name;
+		}
+		
+	}
+	
+	public void setPublishYear(String year)
+	{
+		if(!isYearFormat(year))
+		{
+			throw new IllegalArgumentException(
+					"Year must be 4 consecutive decimals in the range 0-9");
+		}
+		else
+		{
+			this.publishYear=year;
+		}
 	}
 
 	@Override
 	public String toString()
 	{
 		String issueString=this.seriesName+" - ("+this.publishYear+")\n"
-				+ "issue: "+this.issueNumber.toString()+this.subIssue;
+				+ "issue: "+this.issueNumber.toString();
 		return issueString;
 	}
 

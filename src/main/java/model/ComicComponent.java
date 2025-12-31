@@ -10,9 +10,6 @@ package model;
 public interface ComicComponent {
 	
 	
-	
-	public ComicComponent getComicByIssue(String issue);
-	
 	public String getIssuePublishYear();
 	
 	public String getSeriesName();

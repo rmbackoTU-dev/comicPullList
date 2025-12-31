@@ -8,8 +8,9 @@
 3. Comic Book Issues.
 
 As the web application grows it will keep track of the 
-4. Sub issues of comic books
-5. The ISBN and inventory numbers of comic books.
+4. The tracker will keep track of individual issues in a collection of comic book issues, but store the collection as one book
+5. Sub issues of comic books
+6. The ISBN and inventory numbers of comic books.
 
 Future Security Features
 6. Individual accounts to keep track of multiple users comics
