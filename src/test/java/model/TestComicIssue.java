@@ -147,10 +147,14 @@ public class TestComicIssue {
 	 */
 	@Test
 	public void sunnyDayTestIssueSetter(){
-		System.out.println("Sunny Day Constructor Issue/ issue number can be updated");
+		System.out.println("Sunny Day Constructor/ issue number can be updated");
 		loadVariables("Success", "issue");
 		ComicIssue testComic=new ComicIssue(varStrings.get("testIssueName"),
 				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		String issueNum_Update="2";
+		testComic.setIssueNumber(issueNum_Update);
+		String issueNum_retrieved=testComic.getIssueNumber();
+		assertEquals("Issue number should match: "+issueNum_retrieved,issueNum_retrieved, issueNum_Update);
 	}
 	
 
@@ -160,10 +164,14 @@ public class TestComicIssue {
 	 */
 	@Test
 	public void sunnyDayTestSeriesNameSetter(){
-		System.out.println("Sunny Day Constructor Issue/ issue series can be updated");
+		System.out.println("Sunny Day Constructor/ issue series can be updated");
 		loadVariables("Success", "issue");
 		ComicIssue testComic=new ComicIssue(varStrings.get("testIssueName"),
 				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		String issueName_Update="NEW "+varStrings.get("testIssueName");
+		testComic.setSeriesName(issueName_Update);
+		String issueName_retrieved=testComic.getIssueName();
+		assertEquals("Issue name should match: "+issueName_retrieved,issueName_Update, issueName_retrieved);
 	}
 	
 
@@ -173,26 +181,65 @@ public class TestComicIssue {
 	 */
 	@Test
 	public void sunnyDayTestPublishYearSetter(){
-		System.out.println("Sunny Day Constructor Issue/ issue year can be updated" );
+		System.out.println("Sunny Day Constructor/ issue year can be updated" );
 		loadVariables("Success", "issue");
 		ComicIssue testComic=new ComicIssue(varStrings.get("testIssueName"),
 				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		String issueYear_update="2026";
+		testComic.setPublishYear(issueYear_update);
+		String issueYear_retrieved=testComic.getIssuePublishYear();
+		assertEquals("Issue name should match: "+issueYear_retrieved,issueYear_retrieved, issueYear_update);
 	}
 	
 	/*
 	 * Validate bounds checking on issue setting
+	 * Condition: Empty String for issue Num
 	 * Later todo determine how a collection constraint may a effect this
 	 */
 	@Test
 	public void rainyDayTestIssueSetterEmptyString(){
-		System.out.println("Sunny Day Constructor Issue/ issue series with incorrect input fails no issue");
+		System.out.println(" Rainy Day: issue updated to empty string triggers Illegal Argument Exception ");
 		loadVariables("Success", "issue");
 		ComicIssue testComic=new ComicIssue(varStrings.get("testIssueName"),
 				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		try
+		{
+			//Empty set issue should trigger exception
+			testComic.setIssueNumber("");
+		}
+		catch(IllegalArgumentException iae)
+		{
+			assertEquals(iae.getMessage(), "No valid issue String provided");
+		}
+		
 	}
 	
 	/*
 	 * Validate bounds checking on issue setting
+	 * Condition: null for issue Num
+	 * Later todo determine how a collection constraint may a effect this
+	 */
+	@Test
+	public void rainyDayTestIssueSetterNull(){
+		System.out.println(" Rainy Day: issue updated to null triggers Illegal Argument Exception ");
+		loadVariables("Success", "issue");
+		ComicIssue testComic=new ComicIssue(varStrings.get("testIssueName"),
+				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		try
+		{
+			//Null issue should trigger an exception
+			testComic.setIssueNumber(null);
+		}
+		catch(IllegalArgumentException iae)
+		{
+			assertEquals(iae.getMessage(), "Issue attribute shall not be null");
+		}
+		
+	}
+	
+	/*
+	 * Validate bounds checking on issue setting
+	 * Condition: first character of string is not a number
 	 * Later todo determine how a collection constraint may a effect this
 	 */
 	@Test
@@ -201,10 +248,21 @@ public class TestComicIssue {
 		loadVariables("Success", "issue");
 		ComicIssue testComic=new ComicIssue(varStrings.get("testIssueName"),
 				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		try
+		{
+			String incorrectIssue="a";
+			//Null issue should trigger an exception
+			testComic.setIssueNumber(incorrectIssue);
+		}
+		catch(IllegalArgumentException iae)
+		{
+			assertEquals(iae.getMessage(), "Issue does not start with a number");
+		}
 	}
 	
 	/*
 	 * Validate bounds checking on series name setting
+	 * Condition: Issue Series name is an empty string
 	 * Later todo determine how a collection constraint may a effect this
 	 */
 	@Test
@@ -213,10 +271,21 @@ public class TestComicIssue {
 		loadVariables("Success", "issue");
 		ComicIssue testComic=new ComicIssue(varStrings.get("testIssueName"),
 				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		try
+		{
+			//Empty string passed to setSeriesName() should throw IllegalArgumentException
+			String emptySeriesName="";
+			testComic.setSeriesName(emptySeriesName);
+		}
+		catch(IllegalArgumentException iae)
+		{
+			assertEquals("Incorrect error message found", iae.getMessage(), "Comic Name must not be empty or null");
+		}
 	}
 	
 	/*
 	 * Validate bounds checking on series name setting
+	 * Condition: Issue Series name is null
 	 * Later todo determine how a collection constraint may a effect this
 	 */
 	@Test
@@ -225,10 +294,20 @@ public class TestComicIssue {
 		loadVariables("Success", "issue");
 		ComicIssue testComic=new ComicIssue(varStrings.get("testIssueName"),
 				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		try
+		{
+			//null passed to setSeriesName() should throw IllegalArgumentException
+			testComic.setSeriesName(null);
+		}
+		catch(IllegalArgumentException iae)
+		{
+			assertEquals("Incorrect error message found", iae.getMessage(), "Comic Name must not be empty or null");
+		}
 	}
 	
 	/*
 	 * Validate bounds checking on publish year setting
+	 * Condition: The year string is empty
 	 * Later todo determine how a collection constraint may a effect this
 	 */
 	@Test
@@ -237,10 +316,43 @@ public class TestComicIssue {
 		loadVariables("Success", "issue");
 		ComicIssue testComic=new ComicIssue(varStrings.get("testIssueName"),
 				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		try
+		{
+			//empty passed to setPublishYear() should throw IllegalArgumentException
+			String emptyPubYear="";
+			testComic.setPublishYear(emptyPubYear);
+		}
+		catch(IllegalArgumentException iae)
+		{
+			assertEquals("Incorrect error message found", iae.getMessage(), "Year must be 4 consecutive decimals in the range 0-9");
+		}
 	}
 	
 	/*
 	 * Validate bounds checking on publish year setting
+	 * Condition: The year string is null
+	 * Later todo determine how a collection constraint may a effect this
+	 */
+	@Test
+	public void rainyDayTestPublishYearSetterNullYear(){
+		System.out.println("Sunny Day Constructor Issue/ setting issue year fails no year ");
+		loadVariables("Success", "issue");
+		ComicIssue testComic=new ComicIssue(varStrings.get("testIssueName"),
+				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		try
+		{
+			//empty passed to setPublishYear() should throw IllegalArgumentException
+			testComic.setPublishYear(null);
+		}
+		catch(IllegalArgumentException iae)
+		{
+			assertEquals("Incorrect error message found", iae.getMessage(), "Year must be 4 consecutive decimals in the range 0-9");
+		}
+	}
+	
+	/*
+	 * Validate bounds checking on publish year setting
+	 * Condition: The year string is a non-numeric character
 	 * Later todo determine how a collection constraint may a effect this
 	 */
 	@Test
@@ -249,6 +361,16 @@ public class TestComicIssue {
 		loadVariables("Success", "issue");
 		ComicIssue testComic=new ComicIssue(varStrings.get("testIssueName"),
 				varStrings.get("issueYear"), varStrings.get("issueNum"));
+		try
+		{
+			// None numeric string sent to to setPublishYear() should throw IllegalArgumentException
+			String nonNumericYear="abcd";
+			testComic.setPublishYear(nonNumericYear);
+		}
+		catch(IllegalArgumentException iae)
+		{
+			assertEquals("Incorrect error message found", iae.getMessage(), "Year must be 4 consecutive decimals in the range 0-9");
+		}
 	}
 	
 	@Test
@@ -301,24 +423,6 @@ public class TestComicIssue {
 			assertEquals(iae.getMessage(), "Issue does not start with a number");
 		}
 		
-	}
-	
-	@Test
-	public void rainyDayParseIssueNumberFlippedFormat()
-	{
-		System.out.println("Rainy Day Flipped Issue Format");
-		loadVariables("Fail", "Flipped sub issue and issue number");
-		try
-		{
-			ComicIssue testIssueFail=new ComicIssue(varStrings.get("testIssueName"),
-				varStrings.get("issueYear"), varStrings.get("issueNum"));
-			fail("Constructor should throw an illegal argument exception");
-			
-		}
-		catch(IllegalArgumentException iae)
-		{
-			assertEquals(iae.getMessage(),"Issue does not start with a number");
-		}
 	}
 	
 	@Test

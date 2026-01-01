@@ -52,8 +52,13 @@ public class ComicIssue implements ComicComponent{
 	
 	private static boolean isYearFormat(String year)
 	{
-		int inputSize=year.length();
 		boolean result=false;
+		if(year == null)
+		{
+			return result;
+		}
+		int inputSize=year.length();
+		
 		if(inputSize != 4)
 		{
 			return result;
@@ -78,9 +83,13 @@ public class ComicIssue implements ComicComponent{
 	private static Integer parseIssueNumber(String issue)
 	throws IllegalArgumentException
 	{
+		if(issue == null)
+		{
+			throw new IllegalArgumentException("Issue attribute shall not be null");
+		}
 		int inputLength=issue.length();
 		Integer issueNumber=0;
-		if(inputLength == 0 || issue == null)
+		if(inputLength == 0)
 		{
 			throw new IllegalArgumentException("No valid issue String provided");
 		}
