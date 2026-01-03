@@ -9,8 +9,8 @@
   --[X] Remove Unnescessary features
 	--[X] Update TestComicIssue to test collection ID, and setters regression test base features.
 [] Set up Apache Tomcat environment
-[] Set up a MySQL Environment
-[] Create a SQL Script to create the schema for ComicIssue Table
+[X] Set up a MySQL Environment
+[X] Create a SQL Script to create the schema for ComicIssue Table
 [] Create a ComicDatabaseConnector class which establishes JBCD connection to the database
 [] Create a ComicCRUDActions class which will contain in-line SQL for Read and Create operations
 [] Create a ListComicServlet and test that implements Read action from ComicCRUDActions
