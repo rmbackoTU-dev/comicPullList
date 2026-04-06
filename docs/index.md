@@ -1,4 +1,4 @@
-#The Comic Book Repository Page:
+# The Comic Book Repository Page:
 
 This is my comic book repository application built in Java and the Java Web server container Tomcat below are some key instructions for using this application.
 
