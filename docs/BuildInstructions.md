@@ -1,4 +1,4 @@
-#Build Instructions
+# Build Instructions
 
-##How to build and test Locally
+## How to build and test Locally
 **TBD**
