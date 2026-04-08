@@ -24,14 +24,14 @@
 
 ## **Docs Branch**  
 
-- [X]Create a Index page  
+- [X] Create a Index page  
 - []Create a Build instructions page  
-  - []Create template
-  - []Fill in with instructions
-- [X]Link pages via Github pages.  
-- [X]Fix TODO Soft breaks.  
+  - [] Create template
+  - [] Fill in with instructions
+- [X] Link pages via Github pages.  
+- [X] Fix TODO Soft breaks.  
 - [] Create a RTM
-  - []Create Template  
-  - []Fill with requirements from CRUD Branch  
+  - [] Create Template  
+  - [] Fill with requirements from CRUD Branch  
 
 
