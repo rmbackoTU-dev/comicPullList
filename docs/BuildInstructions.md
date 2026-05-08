@@ -121,11 +121,40 @@ tar -xvf apache-tomcat-11.0.5.tar.gz
 cd apache-tomcat-11.0.5.tar.gz/bin
 ./startup.sh
 ```
-    Then in a web browser navigate to http://localhost:8080/
+Then in a web browser navigate to http://localhost:8080/ if you see a tomcat website your tomcat server successfully starts.
 
+**3. Shut down the server after the test using the shutdown script **
+```bash
+cd apache-tomcat-11.0.5.tar.gz/bin
+./startup.sh
+```
 
+### Add Tomcat to the Environment variables:
 
+Catalina home needs to be set of for the application to deploy correctly. To set the CATALINA_BASE and CATALINA_HOME directories do the following:
 
+ ** 1 Backup our .bashrc file
+   ``` bash
+       cp ~/.bashrc ~/.bashrc.bak
+   ```
+
+   ** 2. Add lines to export CATALINA_HOME and CATALINA_BASE to your  .bashrc**
+
+   ```bash
+    echo export CATALINA_BASE='~/dev/Environment/apache-tomcat-11.0.15/'
+    echo export CATALINA_HOME='~/dev/Environment/apache-tomcat-11.0.15/
+
+   ```
+
+   You may choose to replace the ~ with your home directory though bash should resolve it
+
+  ** 3. Restart your terminal **
+  ** 4. Test the setting by echoing out the variables **
+
+  ```bash
+    echo $CATALINA_BASE
+    echo $CATALINA_HOME
+  ```
 
 
 
