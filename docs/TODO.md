@@ -26,8 +26,13 @@
 
 - [X] Create a Index page  
 - []Create a Build instructions page  
-  - [] Create template
-  - [] Fill in with instructions
+  - [X] Java install instructions (Commit-989c75f)
+  - [X] Tomcat install instructions (Commit-54de6f9)
+  - [] MySQL install instructions
+  - [] Maven install instructions
+  - [] Maven deployment instructions
+  - [] Test Environment Resource Instructions
+  - [] Test Instructions in a Virtual Machine
 - [X] Link pages via Github pages.  
 - [X] Fix TODO Soft breaks.  
 - [] Create a RTM
