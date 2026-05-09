@@ -29,9 +29,9 @@
   - [X] Java install instructions (Commit-989c75f)
   - [X] Tomcat install instructions (Commit-54de6f9)
   - [X] MySQL install instructions
-  - [] Maven install instructions
-  - [] Maven deployment instructions
-  - [] Test Environment Resource Instructions
+  - [X] Maven install instructions
+  - [X] Maven deployment instructions
+  - [X]  Environment Config Instructions
   - [] Test Instructions in a Virtual Machine
 - [X] Link pages via Github pages.  
 - [X] Fix TODO Soft breaks.  

@@ -268,29 +268,6 @@ Run the following commands to ensure MySQL will start on boot
 sudo systemctl enable mysql
 sudo systemctl status 
 ```
-
----
-**MySQL Troubleshooting steps**
-
-* If you get the error message:
-    * Access denied for user   
-       Use the below command as root user
-
-      ```SQL
-      SHOW GRANTS FOR 'comicDBService'@'localhost'
-       ```   
-
-
-* If MySQL won't start
-   User the following commands to restart mysql and check logs using journalctl   
-
-   ```bash
-       sudo systemctl restart mysql
-       sudo journalctl -u mysql
-   ```
-
-* If the schema does not load   
-    Ensure you are using the path to ./test/resources/sql-scripts to load and destroy the schema.
  
 ---
 
@@ -328,7 +305,191 @@ This command does the following:
   * Packages the application into a WAR file
 
 If all goes well you should recieve a green
-<span style="color: green;">Success: Build completed.</span>
+<span style="color: green;">BUILD SUCCESS</span>
+
+---
+# 🧪 Setting up secrets for Testing
+
+In order to use this application you should create and set up a properties.config file in 
+<span style="color: yellow;">./src/resources/configs/</span> by doing the following
+
+1. Create the file
+```bash
+   mkdir resources/configs/
+   cd resources/configs
+   touch properties.config
+```
+
+2. In your favorite file editor add the following to the file
+
+```bash
+DB_URL="mysql://localhost:3306/comicBook_DB"
+DB_USER="comicDBService"
+DB_PASSWORD="<STRONG_PASSWORD_HERE>"
+```
+
+3. Add a line to the .gitignore to remove this file from git commits:
+```bash
+ touch .gitignore
+ echo "./src/main/resources/configs/*
+```
+
+**_Note: Generally most things in the config file can safely be removed from git commits_**
+
+<span style="color: red"><em>IMPORTANT: never commit your properties.config to git</em></span>
+
+---
+# Running test with Maven
+
+If you want to build the classes to only test the models, and not run test on Tomcat perform the following:
+
+```bash
+ mvn clean compile
+```
+
+This should compile everything under /src/main/java without producing a WAR
+
+To compile both the main and test code run
+```bash
+mvn clean test-compile
+```
+
+To then run the unit test only do the following:
+```bash
+mvn test
+```
+This runs all the test under /src/test/java
+
+If all the test our good you should see a Test run summary as well as a <span style="color: green;">BUILD SUCCESS</span>
+
+---
+# Build and deploy the WAR
+
+To both test on the Tomcat as well as deploy the functional application you need to make a WAR file
+
+Maven will place funcational WAR files in
+
+```code
+./target/
+```
+
+**1. To build a WAR run the following in the base directory**
+
+```bash
+mvn clean package
+```
+
+**2. Locate the directory for deploying web applications in Tomcat**
+
+ For the run from Environment folder set up this instructions does the directory should be located in
+
+ <span style="color: yellow"></i>~/dev/Environment/apache-tomcat-11.0.15/webapps/</i></span>
+
+**3. Copy the WAR to the webapps folder**
+
+Use the copy command below:
+
+```bash
+sudo cp target/comicPullList.war ~/dev/Environment/apache-tomcat-11.0.15/webapps/
+```
+
+To check the copy completed correctly list the directory
+
+```bash
+ls -al ~/dev/Environment/apache-tomcat-11.0.15/webapps/
+```
+
+**4. Restart your Tomcat installation**
+
+First check if tomcat is running
+```bash
+ps aux | grep tomcat
+```
+
+**4a. If the process is running perform the following scripts**
+```bash
+~/dev/Environment/apache-tomcat-11.0.15/bin/shutdown.sh
+~/dev/Environment/apache-tomcat-11.0.15/bin/startup.sh
+```
+
+**4.b If no tomcat process is found simply do the following"**
+```bash
+~/dev/Environment/apache-tomcat-11.0.15/bin/startup.sh
+
+```
+**5. Access the application**
+The application can be found at the default tomcat URL if the Server.XML was not modified
+
+http://localhost:8080/comicPullList
+
+
+
+---
+# 🔧Troubleshooting steps:
+
+**MySQL Troubleshooting steps**
+
+* If you get the error message:
+    * Access denied for user   
+       Use the below command as root user
+
+      ```SQL
+      SHOW GRANTS FOR 'comicDBService'@'localhost'
+       ```   
+
+
+* If MySQL won't start
+   User the following commands to restart mysql and check logs using journalctl   
+
+   ```bash
+       sudo systemctl restart mysql
+       sudo journalctl -u mysql
+   ```
+
+* If the schema does not load   
+    Ensure you are using the path to ./test/resources/sql-scripts to load and destroy the schema.
+
+* If during a test the resource can not connect make sure the DB_URL matches the url for the mysql server found in
+<span style="color: yellow"> /etc/mysql/mysql.conf.d/mysqld.cnf </span>
+
+    _Note: If you have not modified the defaults the value should be bind address 127.0.0.1, and port 3306. This results in a URL of_
+   <span style="color: pink"><i>mysql://localhost:3306/comicBook_DB </i></span>
+
+**Maven Troublehsooting steps**
+
+For the following issues use the folloiwng steps
+* If Dependencies fail to download
+
+```bash
+mvn dependency:purge-local-repository
+mvn clean package
+```
+
+* If there is a *Java Version Mismatch*:
+   Repeat Java install instructions and ensure java points to the correct JDK
+
+* If the Build fails due to missing resources ensure resources are found under
+
+   ./src/main/resources/
+
+   Additionally make sure you create a properties.config file is created in setting up secrets section
+
+**WAR Deployment troubleshooting**  
+❗ WAR not deploying
+Check Tomcat logs:
+
+```Code
+~/dev/Environment/apache-tomcat-11.0.15/logs/catalina.out
+```
+❗ Permission denied
+Ensure the WAR is readable by the tomcat user:
+
+```bash
+sudo chown tomcat:tomcat /opt/tomcat/webapps/comicbookapp.war
+```
+
+
+
 
 
 
