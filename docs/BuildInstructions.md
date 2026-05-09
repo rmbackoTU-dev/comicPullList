@@ -485,7 +485,7 @@ Check Tomcat logs:
 Ensure the WAR is readable by the tomcat user:
 
 ```bash
-sudo chown tomcat:tomcat /opt/tomcat/webapps/comicbookapp.war
+sudo chown tomcat:tomcat ~/dev/Environment/apache-tomcat-11.0.15/webapps/comicPullList.war
 ```
 
 
