@@ -1,12 +1,18 @@
 # 🏗️ Build & Deployment Instructions
 
+## Assumptions
+
+This build instructions assumes you have cloned the repository using git into a development folder such as ~/dev/ComicPullList/ 
+
+_Note: As of this writing **(May, 10th, 2026)** This is not a production build all features may not be fully verified to work._
+
 ## Server Dependencies
 
 This project  has been verified on the following server‑side components:
 
 - **Apache Tomcat 11.0.15** — servlet container for running the WAR  
 - **MySQL 8.4.8-0ubuntu0.25.10.1 (Ubuntu)** — relational database backend
-- **Ubuntu 25.10 (Questing)**
+- **Ubuntu 24.04 (Noble Numbat) or newer**
 
 ## Install Guides for Dependencies:
 
@@ -29,6 +35,12 @@ Install OpenJDK:
 
 ```bash
 sudo apt install openjdk-17-jdk -y
+```
+
+_Note: As of this install openjdk is version 25.0.3-ea you can use the following to get the latest openjdk_
+
+```bash
+sudo apt install default-jdk -y
 ```
 
 **2.a Verify:**      
@@ -58,22 +70,23 @@ java -version
    **3.d If nothing is set in environment variables, export the java home settings to bashrc  based on the path retrieved from 3.a do not include the pin folder, this should still provide access to all availble binaries in the folder.**
 
    ```bash
-    echo export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64/
+    echo export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64/"
 
    ```
 
    **4. Restart your terminal**
 
-   **5. Rerun the java -version command to check that the version reflects what is in the Java_Home environment variable**
+   **5. Rerun the java -version and the echo JAVA_HOME command to check that the version reflects what is in the Java_Home environment variable**
 
    ```bash
       java -version
+      echo $JAVA_HOME
    ```
 
 
 
 ### Installing Apache Tomcat on Ubuntu:
-📦 Apache Tomcat 11.0.5 Installation Guide (Ubuntu)
+📦 Apache Tomcat 11.0.15 Installation Guide (Ubuntu)
 
 This guide walks through installing **Apache Tomcat 11.0.5** on Ubuntu. For the purpose of version 0.1.0 of this build Tomcat exist in a development directory. More robust build instructions will be added in a future update.
 
@@ -82,7 +95,18 @@ This guide walks through installing **Apache Tomcat 11.0.5** on Ubuntu. For the 
 
 ---
 
-**1. Create a Dedicated Tomcat User**
+**1. Create a dedicated Environment directory to run tomcat out of**
+
+This is a test directory which you can use to run the Tomcat server from.
+
+I like to use a Environment directory in my dev folder
+
+```bash
+mkdir ~/dev/Environment
+```
+
+
+**2. Create a Dedicated Tomcat User**
 
 This user will run the Tomcat service.
 
@@ -92,40 +116,30 @@ sudo useradd -m -U -d /opt/tomcat -s /bin/false tomcat
 
 ---
 
-**2. Download Apache Tomcat 11.0.5**
+**3. Download Apache Tomcat 11.0.15**
 
 Navigate to `/tmp` and download the tarball:
 
 ```bash
-cd /tmp
-wget https://dlcdn.apache.org/tomcat/tomcat-11/v11.0.5/bin/apache-tomcat-11.0.5.tar.gz
+cd ~/dev/Environment/
+wget https://dlcdn.apache.org/tomcat/tomcat-11/v11.0.15/bin/apache-tomcat-11.0.15.tar.gz
 ```
 
----
-
-### Making an environment directory and running from environment 
-
-The below test should be only used when running a test build of the comic book database. 
-
-I utilize the a dev folder in my home folder for all test environments. I reccomend using what best fits your needs.
-
-**1. Copying and unzipping the files**    
+**4.  Unpack and  unzipping the files**    
 ```bash
-mkdir ~/dev/Environment
-cp /tmp/apache-tomcat-11.0.5.tar.gz ~/dev/Environment/
-tar -xvf apache-tomcat-11.0.5.tar.gz
+tar -xvf apache-tomcat-11.0.15.tar.gz
 ```
 
 **2. To test your server install**
 ```bash
-cd apache-tomcat-11.0.5.tar.gz/bin
+cd apache-tomcat-11.0.15/bin
 ./startup.sh
 ```
 Then in a web browser navigate to http://localhost:8080/ if you see a tomcat website your tomcat server successfully starts.
 
 **3. Shut down the server after the test using the shutdown script**
 ```bash
-cd apache-tomcat-11.0.5.tar.gz/bin
+cd apache-tomcat-11.0.15/bin
 ./startup.sh
 ```
 
@@ -320,7 +334,7 @@ In order to use this application you should create and set up a properties.confi
    touch properties.config
 ```
 
-2. In your favorite file editor add the following to the file
+2. In your favorite file editor add the following to the file. The DB URL will depend on your Mysqld.conf file. Choose your own password (DB_PASSWORD) as is appropriate for your use case.
 
 ```bash
 DB_URL="mysql://localhost:3306/comicBook_DB"
@@ -429,7 +443,7 @@ http://localhost:8080/comicPullList
 
 **MySQL Troubleshooting steps**
 
-* If you get the error message:
+❗ If you get the error message:
     * Access denied for user   
        Use the below command as root user
 
@@ -438,7 +452,7 @@ http://localhost:8080/comicPullList
        ```   
 
 
-* If MySQL won't start
+❗ If MySQL won't start
    User the following commands to restart mysql and check logs using journalctl   
 
    ```bash
@@ -446,10 +460,10 @@ http://localhost:8080/comicPullList
        sudo journalctl -u mysql
    ```
 
-* If the schema does not load   
+❗ If the schema does not load   
     Ensure you are using the path to ./test/resources/sql-scripts to load and destroy the schema.
 
-* If during a test the resource can not connect make sure the DB_URL matches the url for the mysql server found in
+❗ If during a test the resource can not connect make sure the DB_URL matches the url for the mysql server found in
 <span style="color: yellow"> /etc/mysql/mysql.conf.d/mysqld.cnf </span>
 
     _Note: If you have not modified the defaults the value should be bind address 127.0.0.1, and port 3306. This results in a URL of_
@@ -458,17 +472,17 @@ http://localhost:8080/comicPullList
 **Maven Troublehsooting steps**
 
 For the following issues use the folloiwng steps
-* If Dependencies fail to download
+❗ If Dependencies fail to download
 
 ```bash
 mvn dependency:purge-local-repository
 mvn clean package
 ```
 
-* If there is a *Java Version Mismatch*:
+❗ If there is a *Java Version Mismatch*:
    Repeat Java install instructions and ensure java points to the correct JDK
 
-* If the Build fails due to missing resources ensure resources are found under
+❗ If the Build fails due to missing resources ensure resources are found under
 
    ./src/main/resources/
 
