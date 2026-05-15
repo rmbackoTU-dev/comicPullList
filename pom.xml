@@ -17,8 +17,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <version.apache.tomcat>10.0.23</version.apache.tomcat>
-    <version.mysql.connector>9.5.0</version.mysql.connector>
+    <version.apache.tomcat>11.0.22</version.apache.tomcat>
+    <version.mysql.connector>9.7.0</version.mysql.connector>
   </properties>
 
   <dependencies>
