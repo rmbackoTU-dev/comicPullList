@@ -12,7 +12,7 @@ This project  has been verified on the following server‑side components:
 
 - **Apache Tomcat 11.0.15** — servlet container for running the WAR  
 - **MySQL 8.4.8-0ubuntu0.25.10.1 (Ubuntu)** — relational database backend
-- **Ubuntu 24.04 (Noble Numbat) or newer**
+- **Ubuntu 25.10 (Questing)**
 
 ## Install Guides for Dependencies:
 
@@ -70,7 +70,7 @@ java -version
    **3.d If nothing is set in environment variables, export the java home settings to bashrc  based on the path retrieved from 3.a do not include the pin folder, this should still provide access to all availble binaries in the folder.**
 
    ```bash
-    echo export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64/"
+    echo export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64/
 
    ```
 
