@@ -26,8 +26,10 @@
 
 - [X] Create a Index page  
 - []Create a Build instructions page  
-  - [] Create template
-  - [] Fill in with instructions
+  - [X] Create template
+  - [X] Fill in with instructions
+  - [] Test out the instructions
+  - [] Add troubleshooting steps
 - [X] Link pages via Github pages.  
 - [X] Fix TODO Soft breaks.  
 - [] Create a RTM
