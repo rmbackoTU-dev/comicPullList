@@ -315,7 +315,7 @@ In order to use this application you should create and set up a properties.confi
 
 1. Create the file
 ```bash
-   mkdir resources/configs/
+   mkdir src/main/resources/configs/
    cd resources/configs
    touch properties.config
 ```
@@ -323,9 +323,9 @@ In order to use this application you should create and set up a properties.confi
 2. In your favorite file editor add the following to the file
 
 ```bash
-DB_URL="mysql://localhost:3306/comicBook_DB"
-DB_USER="comicDBService"
-DB_PASSWORD="<STRONG_PASSWORD_HERE>"
+DB_URL=mysql://localhost:3306/comicBook_DB
+DB_USER=comicDBService
+DB_PASSWORD=<STRONG_PASSWORD_HERE>
 ```
 
 3. Add a line to the .gitignore to remove this file from git commits:
@@ -383,20 +383,20 @@ mvn clean package
 
  For the run from Environment folder set up this instructions does the directory should be located in
 
- <span style="color: yellow"></i>~/dev/Environment/apache-tomcat-11.0.15/webapps/</i></span>
+ <span style="color: yellow"></i>~/dev/Environment/tomcat/apache-tomcat-11.0.22/webapps/</i></span>
 
 **3. Copy the WAR to the webapps folder**
 
 Use the copy command below:
 
 ```bash
-sudo cp target/comicPullList.war ~/dev/Environment/apache-tomcat-11.0.15/webapps/
+sudo cp target/comicPullList.war ~/dev/Environment/apache-tomcat-11.0.22/webapps/
 ```
 
 To check the copy completed correctly list the directory
 
 ```bash
-ls -al ~/dev/Environment/apache-tomcat-11.0.15/webapps/
+ls -al ~/dev/Environment/apache-tomcat-11.0.22/webapps/
 ```
 
 **4. Restart your Tomcat installation**
@@ -455,6 +455,24 @@ http://localhost:8080/comicPullList
     _Note: If you have not modified the defaults the value should be bind address 127.0.0.1, and port 3306. This results in a URL of_
    <span style="color: pink"><i>mysql://localhost:3306/comicBook_DB </i></span>
 
+* If it seems like the JAR for mysql did not get added to the class path check the following:
+ 
+ 1. The resource/configs directory you created in Setting up secrets for testing. src/main/java/resources/
+ 2. Add the following to the Database Connector class when debuging to see if the mysql connector is on the path
+
+     ```Java
+      DriverManager.getDrivers().asIterator().forEachRemaining(
+         d -> System.out.println("Driver: "+d.getClass().getName())
+      );
+     ```
+_Note: Add this to the DatabaseConnector.java class in the getConnection() methods. Set the breakpoint to the top of the getConnection() function. If the debug console prints:  
+```Output 
+   Driver:  com.mysql.cj.jdbc.driver  
+```
+then the database JAR is on the class path._
+
+_Note: The above is debug code remove after confirming the driver is on the class path_
+
 **Maven Troublehsooting steps**
 
 For the following issues use the folloiwng steps
@@ -487,6 +505,8 @@ Ensure the WAR is readable by the tomcat user:
 ```bash
 sudo chown tomcat:tomcat ~/dev/Environment/apache-tomcat-11.0.15/webapps/comicPullList.war
 ```
+
+
 
 
 
