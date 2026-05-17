@@ -26,6 +26,12 @@
 
 - [X] Create a Index page  
 - []Create a Build instructions page  
+  - [X] Java install instructions (Commit-989c75f)
+  - [X] Tomcat install instructions (Commit-54de6f9)
+  - [X] MySQL install instructions
+  - [X] Maven install instructions
+  - [X] Maven deployment instructions
+  - [X]  Environment Config Instructions
   - [X] Create template
   - [X] Fill in with instructions
   - [] Test out the instructions
