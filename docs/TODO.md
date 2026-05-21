@@ -34,8 +34,8 @@
   - [X]  Environment Config Instructions
   - [X] Create template
   - [X] Fill in with instructions
-  - [] Test out the instructions
-  - [] Add troubleshooting steps
+  - [X] Test out the instructions
+  - [X] Add troubleshooting steps
 - [X] Link pages via Github pages.  
 - [X] Fix TODO Soft breaks.  
 - [] Create a RTM
