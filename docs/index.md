@@ -6,3 +6,5 @@ This is my comic book repository application built in Java and the Java Web serv
  [An overview of the comic book app](README.md)  
  [Current Application Roadmap](TODO.md)  
  [Application Build Instructions](BuildInstructions.md)  
+
+ Please check back overtime as this page gets updated.
