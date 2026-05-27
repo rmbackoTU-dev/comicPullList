@@ -18,7 +18,10 @@
 - [] Delete comics in the database using IN-LINE SQL add to ComicCRUDActions  
 - [] Update comics in the database using IN-LINE SQL add to ComicCRUDActions  
 - [] Create a JSP Form that allows comic creation  
+    - [] Map POST to ComicFormServlet
 - [] Create a JSP Page that allows comics to be displayed  
+    - [] Add button to add comics
+    - [] Map List comics page to WelcomeList in Tomcat
 - [] Add a feature to the JSP display page that allows comics to be deleted  
 - [] Add a way to navigate to the JSP Form with the intent to update a comic tie the intent to a comic update  
 
