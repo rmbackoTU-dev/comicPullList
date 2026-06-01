@@ -1,4 +1,4 @@
 target/*
 src/main/resources/configs/*
-./settings/*
+.settings/*
 .vsccode/*
