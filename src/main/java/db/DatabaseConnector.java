@@ -25,10 +25,14 @@ public class DatabaseConnector {
     }
 
     public static Connection getConnection() throws SQLException{
-        return DriverManager.getConnection(dbURL,
+        System.out.println("DBConnector.getConnection() called");
+        System.out.println("URL ["+dbURL+"]");
+        Connection conn=DriverManager.getConnection(dbURL,
             dbUser,
             dbPass
         );
+        System.out.println("Returning connection: "+conn);
+        return conn;
         
     }
 

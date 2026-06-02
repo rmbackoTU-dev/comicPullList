@@ -6,11 +6,21 @@
 
   <display-name>Archetype Created Web Application</display-name>
   <welcome-file-list>
-     <welcome-file>templates/index.html</welcome-file>
+     <welcome-file>templates/index.jsp</welcome-file>
      <welcome-file>index.html</welcome-file>
      <welcome-file>index.htm</welcome-file>
      <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
+
+  <servlet>
+   <servlet-name>ComicFormServlet</servlet-name>
+   <servlet-class>servlet.ComicFormServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+   <servlet-name>ComicFormServlet</servlet-name>
+   <url-pattern>/createComic</url-pattern>
+  </servlet-mapping>
   
 
 </web-app>
