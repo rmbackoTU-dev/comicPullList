@@ -26,7 +26,7 @@ public class ComicFormServlet extends HttpServlet{
         actor=new ComicCRUDActions(); 
     }
     
-    public void doPost(HttpServletRequest request, HttpServletResponse responsemHttpServletResponse)
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException
         {
             String issueName=request.getParameter("comic_Name");
@@ -45,12 +45,12 @@ public class ComicFormServlet extends HttpServlet{
             String comicNum=newIssue.getIssueNumber();
 
             //Tell the user with a response we have stored the comic
-            request.setAttribute("comic_Name",comicName);
-            request.setAttribute("comic_Pub_Year", comicYear);
-            request.setAttribute("comic_issue", comicNum);
-            RequestDispatcher view=getServletContext().getRequestDispatcher("/templates/confirm-entry.jsp");
+            request.setAttribute("name",comicName);
+            request.setAttribute("pubYear", comicYear);
+            request.setAttribute("issue", comicNum);
+            RequestDispatcher view=getServletContext().getRequestDispatcher("/templates/confirm-Entry.jsp");
 
-            view.forward(request, responsemHttpServletResponse);
+            view.forward(request, response);
             
         }
 }
